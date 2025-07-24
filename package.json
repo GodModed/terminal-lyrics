@@ -1,0 +1,19 @@
+{
+  "name": "scripts",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest",
+    "react-devtools-core": "^6.1.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "ink": "^6.0.1",
+    "media-controller": "https://github.com/Moosync/MediaController.git",
+    "react": "^19.1.0",
+    "sqlite3": "^5.1.7"
+  }
+}
