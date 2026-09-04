@@ -1,5 +1,3 @@
-import sqlite3 from 'sqlite3';
-
 export type TrackList = {
     id: number;
     name: string;
@@ -20,44 +18,53 @@ export type LyricList = {
 
 
 export default class API {
-    db: sqlite3.Database;
 
-    constructor() {
-        this.db = new sqlite3.Database('../db.sqlite3');
-    }
+    async getTracksBySearch(query: string): Promise<TrackList[]> {
+        // return new Promise((resolve, reject) => {
+        //     this.db.all<TrackList>(
+        //         `SELECT * FROM tracks WHERE artist_name_lower = ?`,
+        //         [artistName.toLowerCase()],
+        //         (err, rows) => {
+        //             if (err) {
+        //                 console.error('Error fetching data:', err);
+        //                 reject(err);
+        //             } else {
+        //                 resolve(rows);
+        //             }
+        //         }
+        //     );
+        // });
 
-    async getTracksByArtist(artistName: string): Promise<TrackList[]> {
-        return new Promise((resolve, reject) => {
-            this.db.all<TrackList>(
-                `SELECT * FROM tracks WHERE artist_name_lower = ?`,
-                [artistName.toLowerCase()],
-                (err, rows) => {
-                    if (err) {
-                        console.error('Error fetching data:', err);
-                        reject(err);
-                    } else {
-                        resolve(rows);
-                    }
-                }
-            );
+        const res = await fetch(`https://lrclib.net/api/search?q=${encodeURIComponent(query)}`);
+        const json = await res.json();
+        
+        return Object.keys(json).map(key => {
+            const obj = json[key];
+            return {
+                id: obj.id,
+                name: obj.name,
+                name_lower: obj.name.toLowerCase(),
+                artist_name: obj.artistName,
+                artist_name_lower: obj.artistName.toLowerCase(),
+                album_name: obj.albumName,
+                album_name_lower: obj.albumName.toLowerCase(),
+                duration: obj.duration,
+                last_lyric_id: obj.id
+            }
         });
+
     }
 
     async getLyricsByTrackId(trackId: number): Promise<LyricList | null> {
-        return new Promise((resolve, reject) => {
-            this.db.all<LyricList>(
-                `SELECT * FROM lyrics WHERE track_id = ?`,
-                [trackId],
-                (err, rows) => {
-                    if (err) {
-                        console.error('Error fetching data:', err);
-                        reject(err);
-                    } else {
-                        resolve(rows.length > 0 ? rows[0]! : null);
-                    }
-                }
-            );
-        });
+        const res = await fetch(`https://lrclib.net/api/get/${encodeURIComponent(trackId)}`);
+        const json = await res.json();
+
+        return {
+            track_id: trackId,
+            plain_lyrics: json.plainLyrics,
+            synced_lyrics: json.syncedLyrics
+        };
+
     }
 
 }

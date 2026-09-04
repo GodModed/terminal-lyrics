@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, render, Spacer, Text, useInput } from 'ink';
-import sqlite3 from "sqlite3";
-import API, { type LyricList, type TrackList } from './api';
+import API, { type TrackList } from './api';
 
 const api = new API();
 
@@ -182,7 +181,7 @@ function SelectSong({
             //     setData([]);
             // }
             if (inputValue.trim()) {
-                api.getTracksByArtist(inputValue).then(rows => {
+                api.getTracksBySearch(inputValue).then(rows => {
                     setData(rows);
                 }).catch(err => {
                     console.error('Error fetching data:', err);

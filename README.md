@@ -1,15 +1,13 @@
-# scripts
+# Terminal Lyrics
 
-To install dependencies:
+Prints lyrics from any song ever made in the terminal, character by character, word by word, line by line, synced up correctly.
 
-```bash
-bun install
+To install
+```sh
+bun i
 ```
 
-To run:
-
-```bash
-bun run index.ts
+To run
+```sh
+bun run index.tsx
 ```
-
-This project was created using `bun init` in bun v1.2.16. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
